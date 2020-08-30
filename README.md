@@ -18,8 +18,29 @@ A REST API interface for booking tickets
     
     export FLASK_APP=ticket.py
     flask run
-   
-   
+ 
+ 
+### Database Structure :-
+    
+    {
+        "ticketID" : 1,
+        "name" : "XYZ",
+        "phn" : 1234567890,
+        "time" : "15:00",
+        "date" : "2020-09-01",
+        "tickets" : 2,
+        "seats" : ["A1","A2"]
+    }
+    
+       ticketID : It's a primary key assigned to each booking
+       name : Name of the user who is booking the ticket
+       phn : Phone Number of the user
+       time : Time slot of the movie
+       date : Date for which the user wants to book the seats
+       tickets : Number of tickets the user is booking
+       seats : Seat numbers the user wishes to book
+
+
 ### API Calls & Screenshots :-
 
 > ***GET Request ===> http://127.0.0.1:5000/  ===>  {'msg' : 'Welcome to Ticket Booking System', 'status' : 200}***
