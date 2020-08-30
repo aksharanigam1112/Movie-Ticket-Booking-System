@@ -9,7 +9,7 @@ A REST API interface for booking tickets
 * A user can book more than 1 seat and has to provide the seat numbers too.
 
 
-### Insalling Libraries :-
+### Installing Libraries :-
     
     pip install -r requirements.txt
 
