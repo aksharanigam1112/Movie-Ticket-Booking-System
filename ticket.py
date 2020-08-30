@@ -1,5 +1,5 @@
 from flask import Flask,jsonify,request
-from datetime import datetime
+from datetime import date,datetime
 import json
 from flask_pymongo import PyMongo
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,25 +14,28 @@ sched = BackgroundScheduler(daemon=True)
 
 @sched.scheduled_job('interval', minutes=60)
 def removeExpired():
-
+    curr_date = date.today()
     curr_time_hrs = datetime.now().strftime("%H")
     curr_time_mins = datetime.now().strftime("%M")
     tkts = ticket.find({})
 
     for t in tkts :
+        date_booked = t['date']
         time_booked_hrs = t['time'].split(':')[0]
         time_booked_mins = t['time'].split(':')[1]
         diff = 0
 
-        if(curr_time_mins < time_booked_mins) :
-            curr_time_mins+=60
-            curr_time_hrs-=1
-            diff += (float(curr_time_mins)-float(time_booked_mins))/60
+        if(curr_date == date_booked) :
 
-        diff += float(curr_time_hrs) - float(time_booked_hrs)
+            if(curr_time_mins < time_booked_mins) :
+                curr_time_mins+=60
+                curr_time_hrs-=1
+                diff += (float(curr_time_mins)-float(time_booked_mins))/60
 
-        if(diff >= 8):
-            ticket.delete_one({'name':t['name']})
+            diff += float(curr_time_hrs) - float(time_booked_hrs)
+
+            if(diff >= 8):
+                ticket.delete_one({'name':t['name']})
 
 
 def checkTicketCount(t=0):
