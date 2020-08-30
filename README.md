@@ -69,6 +69,8 @@ A REST API interface for booking tickets
 
 
 > ***Expired Tickets Handling***
+        
+        To mark the expired tickets a background scheduling is done.
 
 ![Scheduler](/API_screenshots/Schedule-task.png)
 
