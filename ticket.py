@@ -1,6 +1,7 @@
 from flask import Flask,jsonify,request,Response
 from bson.json_util import dumps
 import json
+import random
 from flask_pymongo import PyMongo
 
 app = Flask(__name__)
@@ -9,19 +10,21 @@ app.config["DEBUG"] = True
 mongo = PyMongo(app)
 ticket = mongo.db.tickets
 
+# Initial API call
 @app.route('/',methods=['GET'])
 def home():
     return jsonify({'msg' : 'Welcome to Ticket Booking System'}),200
 
+# API for Booking a ticket
 @app.route('/book',methods=['POST'])
 def book():
     data = json.loads(request.get_data())
-    # print(type(data))
     try :
         count = 0
         ticket_data = ticket.find({})
+
         for i in ticket_data:
-                count = i['ticketID']
+            count = i['ticketID']
 
         data['ticketID'] = count+1
         ticket.insert(data)
@@ -30,6 +33,7 @@ def book():
     except Exception as e :
         return jsonify({'msg' : str(e)}),500
 
+# API for Updating the time of a ticket
 @app.route('/update',methods=['POST'])
 def update_time():
     data = json.loads(request.get_data())
@@ -43,6 +47,7 @@ def update_time():
     except Exception as e:
         return jsonify({'msg' : str(e)}),500
 
+# API for deleting a particular ticket
 @app.route('/delete/name',methods=['POST'])
 def delete(name):
     try :
@@ -52,7 +57,8 @@ def delete(name):
     except Exception as e:
         return  jsonify({'msg' : str(e)}),500
 
-@app.route('/user/<name>',methods=['GET'])
+# API to view ticket information of a user
+@app.route('/view/<name>',methods=['GET'])
 def viewUserTicket(name):
     try :
         ticketInfo = ticket.find_one({"name" : name},{'_id' : 0,'ticketID':0})
@@ -61,7 +67,8 @@ def viewUserTicket(name):
     except Exception as e:
         return jsonify({'msg' : str(e)}),500
 
-@app.route('/viewAll',methods=['GET'])
+# API to view all the booked tickets
+@app.route('/view',methods=['GET'])
 def viewAllTickets():
     try :
         data = []
@@ -73,6 +80,7 @@ def viewAllTickets():
     except Exception as e :
         return jsonify({'msg':str(e)}),500
 
+# API to remove all the expired tickets
 @app.route('/expired',methods=['GET'])
 def removeExpired():
     pass
