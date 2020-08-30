@@ -10,6 +10,17 @@ app.config["DEBUG"] = True
 mongo = PyMongo(app)
 ticket = mongo.db.tickets
 
+def checkTicketCount(t=0):
+    tickets = ticket.find({})
+    count=t
+    for i in tickets:
+        count+=i['tickets']
+
+    if(count>20):
+        return False
+    else:
+        return True
+
 # Initial API call
 @app.route('/',methods=['GET'])
 def home():
@@ -27,8 +38,13 @@ def book():
             count = i['ticketID']
 
         data['ticketID'] = count+1
-        ticket.insert(data)
-        return jsonify({'msg' : 'booked successfully'}),200
+        flag = checkTicketCount(int(data['tickets']))
+
+        if(flag==True):
+            ticket.insert(data)
+            return jsonify({'msg' : 'booked successfully'}),200
+        else:
+            return jsonify({'msg':'More than 20 tickets cannot be booked'}),200
 
     except Exception as e :
         return jsonify({'msg' : str(e)}),500
@@ -41,7 +57,7 @@ def update_time():
         name = data['name']
         new_time = data['time']
 
-        ticket.find_one_and_update({'name':name },{'$set' : {'time' : new_time}})
+        ticket.find_one_and_update({'name': name},{'$set' : {'time' : new_time}})
         return jsonify({'msg':'updated successfully'}),200
 
     except Exception as e:
@@ -58,11 +74,11 @@ def delete(name):
         return  jsonify({'msg' : str(e)}),500
 
 # API to view ticket information of a user
-@app.route('/view/<name>',methods=['GET'])
-def viewUserTicket(name):
+@app.route('/view/<ticket_id>',methods=['GET'])
+def viewUserTicket(ticket_id):
     try :
-        ticketInfo = ticket.find_one({"name" : name},{'_id' : 0,'ticketID':0})
-        return ticketInfo
+        ticketInfo = ticket.find_one({'ticketID' : int(ticket_id)},{'_id' : 0})
+        return jsonify({'info' : ticketInfo}),200
 
     except Exception as e:
         return jsonify({'msg' : str(e)}),500
