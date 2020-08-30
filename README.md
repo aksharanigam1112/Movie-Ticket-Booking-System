@@ -8,6 +8,18 @@ A REST API interface for booking tickets
 * A ticket is marked expired if there is a difference of 8 hours or more between the ticket timing and current time.
 * A user can book more than 1 seat and has to provide the seat numbers too.
 
+
+### Insalling Libraries :-
+    
+    pip install -r requirements.txt
+
+
+### Run the code :-
+    
+    export FLASK_APP=ticket.py
+    flask run
+   
+   
 ### API Calls & Screenshots :-
 
 > ***GET Request ===> http://127.0.0.1:5000/  ===>  {'msg' : 'Welcome to Ticket Booking System', 'status' : 200}***
