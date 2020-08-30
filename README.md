@@ -68,5 +68,7 @@ A REST API interface for booking tickets
 
 
 
-> To handle the expired tickets a cronjob runs parallely every 1 hour and deletes all the tickets which have a difference of 8 hours or more from the current time.
+> ***Expired Tickets Handling***
+
+![Scheduler](/API_screenshots/Schedule-task.png)
 
